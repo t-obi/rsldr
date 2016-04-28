@@ -1,0 +1,23 @@
+.slider {
+  border: 1px solid red;
+	position: relative;  
+}
+
+.bar, .handle {
+	border: 1px solid teal;
+	display: inline-block;
+}
+
+.bar{
+	background: orange;
+}
+
+.bar {
+	flex: 1;
+}
+
+.handle {
+	position: absolute;
+	transform: translateX(-50%);
+}
+
