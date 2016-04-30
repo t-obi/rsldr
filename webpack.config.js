@@ -9,7 +9,7 @@ const CONFIG_DEV = {
       extensions: ['', '.js', '.jsx', '.json'],
       root: SRC_PATH,
       alias: {
-        sinon: "node_modules/sinon/pkg/sinon.js"
+        sinon:path.resolve(ROOT_PATH, "node_modules/sinon/pkg/sinon.js")
       }
   },
   entry: [
