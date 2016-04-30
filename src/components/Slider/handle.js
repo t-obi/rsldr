@@ -10,14 +10,13 @@ class Handle extends Component {
   };
 
   handleDragStart = () => {
-    this.dragListener = window.addEventListener('mouseup', this.handleDragEnd);
-    this.dragEndListener = window.addEventListener('mousemove', this.handleDrag);
-    console.log('drag start!!');
+    this.dragListener = document.addEventListener('mouseup', this.handleDragEnd);
+    this.dragEndListener = document.addEventListener('mousemove', this.handleDrag);
   };
 
   handleDragEnd = () => {
-    window.removeEventListener('mousemove', this.handleDrag);
-    window.removeEventListener('mouseup', this.handleDragEnd);
+    document.removeEventListener('mousemove', this.handleDrag);
+    document.removeEventListener('mouseup', this.handleDragEnd);
     this.dragListener = null;
     this.dragEndListener = null;
     console.log('handle drag end!!');
