@@ -8,9 +8,9 @@ webpackConfig.externals['react/addons'] = true;
 
 module.exports = function (config) {
   config.set({
-  	browsers: ['Chrome'],
-  	frameworks: ['mocha'],
-  	reporters: ['mocha'],
+    browsers: ['PhantomJS'],
+    frameworks: ['mocha'],
+    reporters: ['mocha'],
     files: [
       //'src/components/Dragon/index.test.js'
       //'src/components/Slider/handle.test.js'
