@@ -25,10 +25,16 @@ class Handle extends Component {
   handleDrag = event => this.props.onDrag(event.screenX);
 
   render() {
+    const style = {
+      position: 'absolute',
+      transform: 'translateX(-50%)',
+      left: this.props.value
+    }
+
     return (
-      <div 
-        className={handle}
-        style={{left: this.props.value}}
+      <div
+        style={style}
+        className={`handle ${handle}`}
         onMouseDown={this.handleDragStart}>
         handle
       </div>
