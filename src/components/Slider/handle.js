@@ -24,6 +24,11 @@ class Handle extends Component {
 
   handleDrag = event => this.props.onDrag(event.screenX);
 
+  componentWillUnmount(){
+    document.removeEventListener('mousemove', this.handleDrag);
+    document.removeEventListener('mouseup', this.handleDragEnd);
+  }
+
   render() {
     const style = {
       position: 'absolute',
