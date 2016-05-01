@@ -33,7 +33,6 @@ class Slider extends Component {
     return (
       <div>
         <Title render={prev => `${prev} | Slider!`}/>
-        <div>hello slider</div>
         <div className={slider}>
             <div className={bar}>bar</div>
             <Handle
