@@ -19,7 +19,6 @@ class Handle extends Component {
     document.removeEventListener('mouseup', this.handleDragEnd);
     this.dragListener = null;
     this.dragEndListener = null;
-    console.log('handle drag end!!');
   };
 
   handleDrag = event => this.props.onDrag(event.screenX);

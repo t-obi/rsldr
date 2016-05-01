@@ -37,6 +37,7 @@ describe('Handle', () => {
   });
 
   // TODO: figure out how to test this
+  // or maybe don't, should be implicitly covered by the other test anyway
   /*
   it('registers a global mouseUp listener on mouseDown', () => {
     expect(false).to.be.true();
@@ -79,7 +80,7 @@ describe('Handle', () => {
   it('invokes handleDrag if mouseDown has fired and mouseUp has not fired yet', () => {
     const spy = sinon.spy();
     const WithSpy = stub(Handle, 'handleDrag', spy);
-    const wrapper = mount(<WithSpy {...emptyProps} />);
+    const wrapper = shallow(<WithSpy {...emptyProps} />);
     wrapper.simulate('mouseDown');
     // needs to fire a real event because testutils.simulate does not work with react 15?!
     simulant.fire(document, 'mousemove');
@@ -90,7 +91,7 @@ describe('Handle', () => {
   it('does NOT invoke handleDrag if mouseDown has not fired', () => {
     const spy = sinon.spy();
     const WithSpy = stub(Handle, 'handleDrag', spy);
-    const wrapper = mount(<WithSpy {...emptyProps} />);
+    const wrapper = shallow(<WithSpy {...emptyProps} />);
     // needs to fire a real event because testutils.simulate does not work with react 15?!
     simulant.fire(document, 'mousemove');
     expect(spy.called).to.be.false;
@@ -100,12 +101,45 @@ describe('Handle', () => {
   it('does NOT invoke the onDrag callback if mouseDown has AND mouseUp have fired', () => {
     const spy = sinon.spy();
     const WithSpy = stub(Handle, 'handleDrag', spy);
-    const wrapper = mount(<WithSpy {...emptyProps} />);
+    const wrapper = shallow(<WithSpy {...emptyProps} />);
     wrapper.simulate('mouseDown');
     // needs to fire a real event because testutils.simulate does not work with react 15?!
     simulant.fire(document, 'mouseup');
     simulant.fire(document, 'mousemove');
     expect(spy.called).to.be.false;
     wrapper.unmount();
+  });
+
+  it('should set the position-offset (->"left") to the value from props', () => {
+    const wrapper = shallow(<Handle {...emptyProps} />);
+    expect(wrapper).to.have.style('left', '0');
+    wrapper.setProps({value: 12});
+    expect(wrapper).to.have.style('left', '12px');
+    wrapper.setProps({value: 123});
+    expect(wrapper).to.have.style('left', '123px');
+    wrapper.setProps({value: 666});
+    expect(wrapper).to.have.style('left', '666px');
+
+    wrapper.unmount();
+  });
+
+  it('should invoke ondrag callback when handleDrag is called', () => {
+    const spy = sinon.spy();
+    const wrapper = shallow(<Handle {...emptyProps} onDrag={spy} />);
+    wrapper.instance().handleDrag({screenX: 0});
+    expect(spy.called).to.be.true;
+  });
+
+  it('should pass the value of event.screenX to onDrag prop', () => {
+    const spy = sinon.spy();
+    const wrapper = shallow(<Handle {...emptyProps} onDrag={spy} />);
+    wrapper.instance().handleDrag({screenX: 123});
+    expect(spy.calledWith(123)).to.be.true;
+    wrapper.instance().handleDrag({screenX: 666});
+    expect(spy.calledWith(666)).to.be.true;
+    wrapper.instance().handleDrag({screenX: 0});
+    expect(spy.calledWith(0)).to.be.true;
+    wrapper.instance().handleDrag({screenX: 8080});
+    expect(spy.calledWith(8080)).to.be.true;
   });
 })
