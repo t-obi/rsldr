@@ -1,5 +1,5 @@
-import React, {Component, PropTypes} from 'react'
-import { handle } from './styles.css'
+import React, { Component, PropTypes } from 'react';
+import { handle } from './styles.css';
 
 class Handle extends Component {
 
@@ -9,6 +9,11 @@ class Handle extends Component {
     onDrag: PropTypes.func.isRequired,
     onDragEnd: PropTypes.func,
   };
+
+  componentWillUnmount() {
+    document.removeEventListener('mousemove', this.handleDrag);
+    document.removeEventListener('mouseup', this.handleDragEnd);
+  }
 
   handleDragStart = (event) => {
     this.dragStartMousePosition = event.screenX;
@@ -28,27 +33,23 @@ class Handle extends Component {
     this.props.onDrag(this.dragStartHandlePosition + event.screenX - this.dragStartMousePosition);
   }
 
-  componentWillUnmount(){
-    document.removeEventListener('mousemove', this.handleDrag);
-    document.removeEventListener('mouseup', this.handleDragEnd);
-  }
-
   render() {
     const style = {
       position: 'absolute',
       transform: 'translateX(-50%)',
-      left: this.props.position
-    }
+      left: this.props.position,
+    };
 
     return (
       <div
-        ref='handle'
+        ref="handle"
         style={style}
         className={`handle ${handle}`}
-        onMouseDown={this.handleDragStart}>
+        onMouseDown={this.handleDragStart}
+      >
         handle
       </div>
-    )
+    );
   }
 }
 
