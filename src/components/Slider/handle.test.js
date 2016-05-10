@@ -1,20 +1,20 @@
 /* eslint-env mocha*/
 import Handle from './handle';
-import { handle, slider } from './styles.css';
 
 import React from 'react';
-import { shallow, mount } from 'enzyme';
-import { render } from 'react-dom';
+import { shallow } from 'enzyme';
 import chai, { expect } from 'chai';
 import chaiEnzyme from 'chai-enzyme';
+import dirtyChai from 'dirty-chai';
 chai.use(chaiEnzyme());
+chai.use(dirtyChai);
+
 import sinon from 'sinon';
 import stub from '../../testutils/stub-class-property';
-import ReactTestUtils from 'react-addons-test-utils';
 import simulant from 'simulant';
 
 describe('Handle', () => {
-  const emptyProps = { onDrag:() => {}, value:0 };
+  const emptyProps = { onDrag: () => {}, value: 0 };
   it('renders a div with position: absolute', () => {
     const wrapper = shallow(<Handle {...emptyProps} />);
     expect(wrapper).to.have.style('position', 'absolute');
@@ -32,7 +32,7 @@ describe('Handle', () => {
     const WithSpy = stub(Handle, 'handleDragStart', spy);
     const wrapper = shallow(<WithSpy {...emptyProps} />);
     wrapper.simulate('mouseDown');
-    expect(spy.calledOnce).to.be.true;
+    expect(spy.calledOnce).to.be.true();
     wrapper.unmount();
   });
 
@@ -63,19 +63,21 @@ describe('Handle', () => {
     wrapper.simulate('mouseDown');
     // needs to fire a real event because testutils.simulate does not work with react 15?!
     simulant.fire(document, 'mouseup');
-    expect(spy.calledOnce).to.be.true;
+    expect(spy.calledOnce).to.be.true();
     wrapper.unmount();
   });
 
-  it('does NOT invoke the onDragEnd callback when mouseUp fires but mouseDown has not fired before', () => {
-    const spy = sinon.spy();
-    const WithSpy = stub(Handle, 'handleDragEnd', spy);
-    const wrapper = shallow(<WithSpy {...emptyProps} />);
-    // needs to fire a real event because testutils.simulate does not work with react 15?!
-    simulant.fire(document, 'mouseup');
-    expect(spy.called).to.be.false;
-    wrapper.unmount();
-  });
+  it('does NOT invoke the onDragEnd callback when mouseUp fires but mouseDown has not fired before',
+    () => {
+      const spy = sinon.spy();
+      const WithSpy = stub(Handle, 'handleDragEnd', spy);
+      const wrapper = shallow(<WithSpy {...emptyProps} />);
+      // needs to fire a real event because testutils.simulate does not work with react 15?!
+      simulant.fire(document, 'mouseup');
+      expect(spy.called).to.be.false();
+      wrapper.unmount();
+    }
+  );
 
   it('invokes handleDrag if mouseDown has fired and mouseUp has not fired yet', () => {
     const spy = sinon.spy();
@@ -84,7 +86,7 @@ describe('Handle', () => {
     wrapper.simulate('mouseDown');
     // needs to fire a real event because testutils.simulate does not work with react 15?!
     simulant.fire(document, 'mousemove');
-    expect(spy.called).to.be.true;
+    expect(spy.called).to.be.true();
     wrapper.unmount();
   });
 
@@ -94,7 +96,7 @@ describe('Handle', () => {
     const wrapper = shallow(<WithSpy {...emptyProps} />);
     // needs to fire a real event because testutils.simulate does not work with react 15?!
     simulant.fire(document, 'mousemove');
-    expect(spy.called).to.be.false;
+    expect(spy.called).to.be.false();
     wrapper.unmount();
   });
 
@@ -106,7 +108,7 @@ describe('Handle', () => {
     // needs to fire a real event because testutils.simulate does not work with react 15?!
     simulant.fire(document, 'mouseup');
     simulant.fire(document, 'mousemove');
-    expect(spy.called).to.be.false;
+    expect(spy.called).to.be.false();
     wrapper.unmount();
   });
 
@@ -127,19 +129,19 @@ describe('Handle', () => {
     const spy = sinon.spy();
     const wrapper = shallow(<Handle {...emptyProps} onDrag={spy} />);
     wrapper.instance().handleDrag({ screenX: 0 });
-    expect(spy.called).to.be.true;
+    expect(spy.called).to.be.true();
   });
 
   it('should pass the value of event.screenX to onDrag prop', () => {
     const spy = sinon.spy();
     const wrapper = shallow(<Handle {...emptyProps} onDrag={spy} />);
     wrapper.instance().handleDrag({ screenX: 123 });
-    expect(spy.calledWith(123)).to.be.true;
+    expect(spy.calledWith(123)).to.be.true();
     wrapper.instance().handleDrag({ screenX: 666 });
-    expect(spy.calledWith(666)).to.be.true;
+    expect(spy.calledWith(666)).to.be.true();
     wrapper.instance().handleDrag({ screenX: 0 });
-    expect(spy.calledWith(0)).to.be.true;
+    expect(spy.calledWith(0)).to.be.true();
     wrapper.instance().handleDrag({ screenX: 8080 });
-    expect(spy.calledWith(8080)).to.be.true;
+    expect(spy.calledWith(8080)).to.be.true();
   });
 });
