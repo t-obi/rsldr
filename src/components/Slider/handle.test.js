@@ -1,11 +1,11 @@
-/*eslint-env mocha*/
-import Handle from './handle'
-import { handle, slider } from './styles.css'
+/* eslint-env mocha*/
+import Handle from './handle';
+import { handle, slider } from './styles.css';
 
-import React from 'react'
-import {shallow, mount} from 'enzyme'
-import { render } from 'react-dom'
-import chai, {expect} from 'chai';
+import React from 'react';
+import { shallow, mount } from 'enzyme';
+import { render } from 'react-dom';
+import chai, { expect } from 'chai';
 import chaiEnzyme from 'chai-enzyme';
 chai.use(chaiEnzyme());
 import sinon from 'sinon';
@@ -14,7 +14,7 @@ import ReactTestUtils from 'react-addons-test-utils';
 import simulant from 'simulant';
 
 describe('Handle', () => {
-  const emptyProps = {onDrag:() => {}, value:0 }
+  const emptyProps = { onDrag:() => {}, value:0 };
   it('renders a div with position: absolute', () => {
     const wrapper = shallow(<Handle {...emptyProps} />);
     expect(wrapper).to.have.style('position', 'absolute');
@@ -55,7 +55,7 @@ describe('Handle', () => {
     expect(false).to.be.true();
   });
   */
- 
+
   it('invokes handleDragEnd when mouseUp fires after mouseDown fired', () => {
     const spy = sinon.spy();
     const WithSpy = stub(Handle, 'handleDragEnd', spy);
@@ -113,11 +113,11 @@ describe('Handle', () => {
   it('should set the position-offset (->"left") to the value from props', () => {
     const wrapper = shallow(<Handle {...emptyProps} />);
     expect(wrapper).to.have.style('left', '0');
-    wrapper.setProps({value: 12});
+    wrapper.setProps({ value: 12 });
     expect(wrapper).to.have.style('left', '12px');
-    wrapper.setProps({value: 123});
+    wrapper.setProps({ value: 123 });
     expect(wrapper).to.have.style('left', '123px');
-    wrapper.setProps({value: 666});
+    wrapper.setProps({ value: 666 });
     expect(wrapper).to.have.style('left', '666px');
 
     wrapper.unmount();
@@ -126,20 +126,20 @@ describe('Handle', () => {
   it('should invoke ondrag callback when handleDrag is called', () => {
     const spy = sinon.spy();
     const wrapper = shallow(<Handle {...emptyProps} onDrag={spy} />);
-    wrapper.instance().handleDrag({screenX: 0});
+    wrapper.instance().handleDrag({ screenX: 0 });
     expect(spy.called).to.be.true;
   });
 
   it('should pass the value of event.screenX to onDrag prop', () => {
     const spy = sinon.spy();
     const wrapper = shallow(<Handle {...emptyProps} onDrag={spy} />);
-    wrapper.instance().handleDrag({screenX: 123});
+    wrapper.instance().handleDrag({ screenX: 123 });
     expect(spy.calledWith(123)).to.be.true;
-    wrapper.instance().handleDrag({screenX: 666});
+    wrapper.instance().handleDrag({ screenX: 666 });
     expect(spy.calledWith(666)).to.be.true;
-    wrapper.instance().handleDrag({screenX: 0});
+    wrapper.instance().handleDrag({ screenX: 0 });
     expect(spy.calledWith(0)).to.be.true;
-    wrapper.instance().handleDrag({screenX: 8080});
+    wrapper.instance().handleDrag({ screenX: 8080 });
     expect(spy.calledWith(8080)).to.be.true;
   });
-})
+});
