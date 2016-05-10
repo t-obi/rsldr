@@ -5,11 +5,14 @@ class Handle extends Component {
 
   static propTypes = {
     value: PropTypes.number.isRequired,
+    position: PropTypes.number.isRequired,
     onDrag: PropTypes.func.isRequired,
     onDragEnd: PropTypes.func,
   };
 
-  handleDragStart = () => {
+  handleDragStart = (event) => {
+    this.dragStartMousePosition = event.screenX;
+    this.dragStartHandlePosition = this.props.position;
     this.dragListener = document.addEventListener('mouseup', this.handleDragEnd);
     this.dragEndListener = document.addEventListener('mousemove', this.handleDrag);
   };
@@ -21,7 +24,9 @@ class Handle extends Component {
     this.dragEndListener = null;
   };
 
-  handleDrag = event => this.props.onDrag(event.screenX);
+  handleDrag = event => {
+    this.props.onDrag(this.dragStartHandlePosition + event.screenX - this.dragStartMousePosition);
+  }
 
   componentWillUnmount(){
     document.removeEventListener('mousemove', this.handleDrag);
@@ -32,11 +37,12 @@ class Handle extends Component {
     const style = {
       position: 'absolute',
       transform: 'translateX(-50%)',
-      left: this.props.value
+      left: this.props.position
     }
 
     return (
       <div
+        ref='handle'
         style={style}
         className={`handle ${handle}`}
         onMouseDown={this.handleDragStart}>
