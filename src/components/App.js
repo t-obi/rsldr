@@ -1,11 +1,11 @@
 import React from 'react';
-const { arrayOf, element } = React.PropTypes;
+const { element } = React.PropTypes;
 
 import { IndexLink } from 'react-router';
 import Title from 'react-title-component';
 
 const propTypes = {
-  children: arrayOf(element),
+  children: element,
 };
 
 const App = props => (
