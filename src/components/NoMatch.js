@@ -1,10 +1,7 @@
 import React from 'react';
 
-export default React.createClass({
-  render() {
-    return (
-      <div>404</div>
-    );
-  },
-});
+const noMatch = () => (
+  <div>404</div>
+);
 
+export default noMatch;

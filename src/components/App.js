@@ -1,19 +1,24 @@
 import React from 'react';
-import { IndexLink, Link } from 'react-router';
+const { arrayOf, element } = React.PropTypes;
+
+import { IndexLink } from 'react-router';
 import Title from 'react-title-component';
 
-export default React.createClass({
-  render() {
-    return (
-      <div>
-        <Title render="Awesome App" />
-        <h1>Slider Example</h1>
-        <ul>
-          <li><IndexLink to="/">Home</IndexLink></li>
-        </ul>
-        {this.props.children}
-      </div>
-    );
-  },
-});
+const propTypes = {
+  children: arrayOf(element),
+};
 
+const App = props => (
+  <div>
+    <Title render="Awesome App" />
+    <h1>Slider Example</h1>
+    <ul>
+      <li><IndexLink to="/">Home</IndexLink></li>
+    </ul>
+    {props.children}
+  </div>
+);
+
+App.propTypes = propTypes;
+
+export default App;
