@@ -3,6 +3,7 @@
   "globals": {
     "__DEV__": true
   },
+  "parser": "babel-eslint",
   "rules": {
     "react/jsx-uses-react": 1,
     "react/jsx-no-undef": 2,
