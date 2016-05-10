@@ -5,7 +5,9 @@
   "description": "",
   "scripts": {
     "start": "node run.js",
-    "test": "karma start"
+    "test": "karma start",
+    "eslint": "eslint src",
+    "eslint-fix": "eslint --fix src"
   },
   "author": "",
   "license": "ISC",
@@ -26,8 +28,11 @@
     "chai-enzyme": "0.4.2",
     "css-loader": "0.23.1",
     "enzyme": "2.2.0",
-    "eslint": "1.10.3",
-    "eslint-plugin-react": "3.16.1",
+    "eslint": "2.9.0",
+    "eslint-config-airbnb": "9.0.1",
+    "eslint-plugin-import": "1.7.0",
+    "eslint-plugin-jsx-a11y": "1.2.0",
+    "eslint-plugin-react": "5.1.1",
     "express": "4.13.4",
     "extract-text-webpack-plugin": "1.0.1",
     "file-loader": "0.8.5",
