@@ -10,11 +10,14 @@ class Handle extends Component {
     onDragEnd: PropTypes.func,
   };
 
+  componentDidMount() {
+    this.dragStartMousePosition = 0;
+    this.dragStartHandlePosition = 0;
+  }
+
   componentWillUnmount() {
     document.removeEventListener('mousemove', this.handleDrag);
     document.removeEventListener('mouseup', this.handleDragEnd);
-    this.dragStartMousePosition = 0;
-    this.dragStartHandlePosition = 0;
   }
 
   handleDragStart = (event) => {
