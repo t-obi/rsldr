@@ -2,7 +2,7 @@
 import Handle from './handle';
 
 import React from 'react';
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import chai, { expect } from 'chai';
 import chaiEnzyme from 'chai-enzyme';
 import dirtyChai from 'dirty-chai';
@@ -16,13 +16,13 @@ import simulant from 'simulant';
 describe('Handle', () => {
   const emptyProps = { onDrag: () => {}, value: 0 };
   it('renders a div with position: absolute', () => {
-    const wrapper = shallow(<Handle {...emptyProps} />);
+    const wrapper = mount(<Handle {...emptyProps} />);
     expect(wrapper).to.have.style('position', 'absolute');
     wrapper.unmount();
   });
 
   it('has css class "handle', () => {
-    const wrapper = shallow(<Handle {...emptyProps} />);
+    const wrapper = mount(<Handle {...emptyProps} />);
     expect(wrapper).to.have.className('handle');
     wrapper.unmount();
   });
@@ -30,7 +30,7 @@ describe('Handle', () => {
   it('invokes handleDragStart on mouseDown', () => {
     const spy = sinon.spy();
     const WithSpy = stub(Handle, 'handleDragStart', spy);
-    const wrapper = shallow(<WithSpy {...emptyProps} />);
+    const wrapper = mount(<WithSpy {...emptyProps} />);
     wrapper.simulate('mouseDown');
     expect(spy.calledOnce).to.be.true();
     wrapper.unmount();
@@ -59,8 +59,8 @@ describe('Handle', () => {
   it('invokes handleDragEnd when mouseUp fires after mouseDown fired', () => {
     const spy = sinon.spy();
     const WithSpy = stub(Handle, 'handleDragEnd', spy);
-    const wrapper = shallow(<WithSpy {...emptyProps} />);
-    wrapper.simulate('mouseDown');
+    const wrapper = mount(<WithSpy {...emptyProps} />);
+    wrapper.simulate('mouseDown', { screenX: 20 });
     // needs to fire a real event because testutils.simulate does not work with react 15?!
     simulant.fire(document, 'mouseup');
     expect(spy.calledOnce).to.be.true();
@@ -71,7 +71,7 @@ describe('Handle', () => {
     () => {
       const spy = sinon.spy();
       const WithSpy = stub(Handle, 'handleDragEnd', spy);
-      const wrapper = shallow(<WithSpy {...emptyProps} />);
+      const wrapper = mount(<WithSpy {...emptyProps} />);
       // needs to fire a real event because testutils.simulate does not work with react 15?!
       simulant.fire(document, 'mouseup');
       expect(spy.called).to.be.false();
@@ -82,8 +82,8 @@ describe('Handle', () => {
   it('invokes handleDrag if mouseDown has fired and mouseUp has not fired yet', () => {
     const spy = sinon.spy();
     const WithSpy = stub(Handle, 'handleDrag', spy);
-    const wrapper = shallow(<WithSpy {...emptyProps} />);
-    wrapper.simulate('mouseDown');
+    const wrapper = mount(<WithSpy {...emptyProps} />);
+    wrapper.simulate('mouseDown', { screenX: 20 });
     // needs to fire a real event because testutils.simulate does not work with react 15?!
     simulant.fire(document, 'mousemove');
     expect(spy.called).to.be.true();
@@ -93,7 +93,7 @@ describe('Handle', () => {
   it('does NOT invoke handleDrag if mouseDown has not fired', () => {
     const spy = sinon.spy();
     const WithSpy = stub(Handle, 'handleDrag', spy);
-    const wrapper = shallow(<WithSpy {...emptyProps} />);
+    const wrapper = mount(<WithSpy {...emptyProps} />);
     // needs to fire a real event because testutils.simulate does not work with react 15?!
     simulant.fire(document, 'mousemove');
     expect(spy.called).to.be.false();
@@ -103,8 +103,8 @@ describe('Handle', () => {
   it('does NOT invoke the onDrag callback if mouseDown has AND mouseUp have fired', () => {
     const spy = sinon.spy();
     const WithSpy = stub(Handle, 'handleDrag', spy);
-    const wrapper = shallow(<WithSpy {...emptyProps} />);
-    wrapper.simulate('mouseDown');
+    const wrapper = mount(<WithSpy {...emptyProps} />);
+    wrapper.simulate('mouseDown', { screenX: 20 });
     // needs to fire a real event because testutils.simulate does not work with react 15?!
     simulant.fire(document, 'mouseup');
     simulant.fire(document, 'mousemove');
@@ -127,14 +127,14 @@ describe('Handle', () => {
 
   it('should invoke ondrag callback when handleDrag is called', () => {
     const spy = sinon.spy();
-    const wrapper = shallow(<Handle {...emptyProps} onDrag={spy} />);
+    const wrapper = mount(<Handle {...emptyProps} onDrag={spy} />);
     wrapper.instance().handleDrag({ screenX: 0 });
     expect(spy.called).to.be.true();
   });
 
   it('should pass the value of event.screenX to onDrag prop', () => {
     const spy = sinon.spy();
-    const wrapper = shallow(<Handle {...emptyProps} onDrag={spy} />);
+    const wrapper = mount(<Handle {...emptyProps} onDrag={spy} />);
     wrapper.instance().handleDrag({ screenX: 123 });
     expect(spy.calledWith(123)).to.be.true();
     wrapper.instance().handleDrag({ screenX: 666 });
