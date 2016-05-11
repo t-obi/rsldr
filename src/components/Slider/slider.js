@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { slider, bar } from './styles.css';
+import { slider, bar, bar1, bar2 } from './styles.css';
 import Handle from './handle';
 
 class Slider extends Component {
@@ -43,19 +43,30 @@ class Slider extends Component {
 
   measure = () => {
     const { width } = this.refs.slider.getBoundingClientRect();
-    this.setState({ pixelsPerValue: width / (this.props.max - this.props.min) });
+    this.setState({
+      width,
+      pixelsPerValue: width / (this.props.max - this.props.min),
+    });
   }
 
   render() {
     return (
       <div className={slider} ref="slider">
-        <div className={bar}>bar</div>
+        <div
+          style={{ width: Math.floor(this.state.value * this.state.pixelsPerValue) }}
+          className={`${bar} ${bar1} bar1`}
+        />
         <Handle
           onDrag={this.handleDrag}
           position={this.state.value * this.state.pixelsPerValue}
           value={this.state.value}
         />
-        <div className={bar}>bar</div>
+        <div
+          style={{
+            width: this.state.width - Math.floor(this.state.value * this.state.pixelsPerValue),
+          }}
+          className={`${bar} ${bar2} bar2`}
+        />
       </div>
     );
   }

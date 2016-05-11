@@ -52,7 +52,7 @@ class Handle extends Component {
         className={`handle ${handle}`}
         onMouseDown={this.handleDragStart}
       >
-        handle
+      {this.props.value}
       </div>
     );
   }

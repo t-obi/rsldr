@@ -1,17 +1,25 @@
 .slider {
-  border: 1px solid red;
-  position: relative;  
+  position: relative;
+  margin: 100px;
+  height: 50px;
 }
 
 .bar, .handle {
-  border: 1px solid teal;
   display: inline-block;
+  background: red;
+  height: 100%;
 }
 
-.bar{
+.handle {
+	width: 50px;
+	line-height: 50px;
+	text-align: center;
+	cursor: pointer;
+}
+
+.bar1{
+  background: blue;
+}
+.bar2{
   background: orange;
-}
-
-.bar {
-  flex: 1;
 }
