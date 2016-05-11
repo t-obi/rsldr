@@ -13,8 +13,8 @@ const CONFIG_DEV = {
     },
   },
   entry: [
-    // 'webpack-dev-server/client?http://localhost:3000',
-    // 'webpack/hot/only-dev-server',
+    'webpack-dev-server/client?http://localhost:3000',
+    'webpack/hot/only-dev-server',
     path.join(SRC_PATH, 'main.js'),
   ],
   module: {
@@ -52,7 +52,7 @@ const CONFIG_DEV = {
   },
   output: {
     path: path.resolve(__dirname, 'build'),
-    publicPath: '/assets/',
+    publicPath: '/',
     filename: 'bundle.js',
   },
   plugins: [
