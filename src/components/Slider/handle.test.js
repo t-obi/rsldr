@@ -14,7 +14,7 @@ import stub from '../../testutils/stub-class-property';
 import simulant from 'simulant';
 
 describe('Handle', () => {
-  const emptyProps = { onDrag: () => {}, value: 0 };
+  const emptyProps = { onDrag: () => {}, value: 0, position: 0 };
   it('renders a div with position: absolute', () => {
     const wrapper = mount(<Handle {...emptyProps} />);
     expect(wrapper).to.have.style('position', 'absolute');
@@ -112,14 +112,14 @@ describe('Handle', () => {
     wrapper.unmount();
   });
 
-  it('should set the position-offset (->"left") to the value from props', () => {
-    const wrapper = shallow(<Handle {...emptyProps} />);
-    expect(wrapper).to.have.style('left', '0');
-    wrapper.setProps({ value: 12 });
+  it('should set the position-offset (->"left") to the position from props', () => {
+    const wrapper = mount(<Handle {...emptyProps} />);
+    expect(wrapper).to.have.style('left', '0px');
+    wrapper.setProps({ position: 12 });
     expect(wrapper).to.have.style('left', '12px');
-    wrapper.setProps({ value: 123 });
+    wrapper.setProps({ position: 123 });
     expect(wrapper).to.have.style('left', '123px');
-    wrapper.setProps({ value: 666 });
+    wrapper.setProps({ position: 666 });
     expect(wrapper).to.have.style('left', '666px');
 
     wrapper.unmount();
