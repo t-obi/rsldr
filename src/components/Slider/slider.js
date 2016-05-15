@@ -9,6 +9,9 @@ class Slider extends Component {
     min: PropTypes.number.isRequired,
     max: PropTypes.number.isRequired,
     step: PropTypes.number.isRequired,
+    onBeforeChange: PropTypes.func,
+    onChange: PropTypes.func,
+    onAfterChange: PropTypes.func,
   };
 
   static defaultProps = {
@@ -16,6 +19,9 @@ class Slider extends Component {
     min: 0,
     max: 100,
     step: 1,
+    onBeforeChange: () => {},
+    onChange: () => {},
+    onAfterChange: () => {},
   }
 
   state = {
@@ -39,6 +45,7 @@ class Slider extends Component {
       Math.floor(pixelOffset / this.state.pixelsPerValue),
       this.props.max), this.props.min);
     this.setState({ values });
+    this.props.onChange(values);
   };
 
   measure = () => {
@@ -68,7 +75,9 @@ class Slider extends Component {
         {values.map((value, currentIndex) => (
           <Handle
             key={`handle${currentIndex}`}
+            onDragStart={() => this.props.onBeforeChange(this.state.values)}
             onDrag={nextValue => this.handleDrag(nextValue, currentIndex)}
+            onDragEnd={() => this.props.onAfterChange(this.state.values)}
             position={value * this.state.pixelsPerValue}
             value={value}
           />
