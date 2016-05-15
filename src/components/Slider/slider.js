@@ -5,22 +5,21 @@ import Handle from './handle';
 class Slider extends Component {
 
   static propTypes = {
-    values: PropTypes.arrayOf(PropTypes.number),
-    defaultValues: PropTypes.arrayOf(PropTypes.number.isRequired),
+    values: PropTypes.arrayOf(PropTypes.number.isRequired),
     min: PropTypes.number.isRequired,
     max: PropTypes.number.isRequired,
     step: PropTypes.number.isRequired,
   };
 
   static defaultProps = {
-    defaultValues: [0, 20],
+    values: [0, 100],
     min: 0,
     max: 100,
     step: 1,
   }
 
   state = {
-    values: this.props.defaultValues,
+    values: this.props.values,
     pixelsPerValue: 1,
   }
 
@@ -39,7 +38,6 @@ class Slider extends Component {
     values[idx] = Math.max(Math.min(
       Math.floor(pixelOffset / this.state.pixelsPerValue),
       this.props.max), this.props.min);
-    console.log('set values: ', values);
     this.setState({ values });
   };
 
@@ -57,42 +55,52 @@ class Slider extends Component {
     return (
       <div className={slider} ref="slider">
         <div
+          key="bar0"
           style={{
             height: 50,
             position: 'absolute',
             left: 0,
             right: `${(max - min - values[0]) / (max - min) * 100}%`,
           }}
-          className={`${bar} ${bar1} bar1`}
+          className={`${bar} ${bar1} bar0`}
         />
-        <Handle
-          onDrag={value => this.handleDrag(value, 0)}
-          position={this.state.values[0] * this.state.pixelsPerValue}
-          value={this.state.values[0]}
+        {/* create one handle per value */}
+        {values.map((value, currentIndex) => (
+          <Handle
+            key={`handle${currentIndex}`}
+            onDrag={nextValue => this.handleDrag(nextValue, currentIndex)}
+            position={value * this.state.pixelsPerValue}
+            value={value}
+          />
+        ))}
+        {/* create one bar in-between every two values.
+          * i.e., not first and last bars,
+          * these will always be created
+         */}
+        {values.map((value, currentIndex) => (
+          currentIndex === values.length - 1
+            ? null
+            : <div
+              key={`bar${currentIndex + 1}`}
+              style={{
+                height: 50,
+                position: 'absolute',
+                background: 'green',
+                left: `${value / (max - min) * 100}%`,
+                right: `${(max - min - values[currentIndex + 1]) / (max - min) * 100}%`,
+              }}
+              className={`${bar} ${bar2} bar${currentIndex + 1}`}
+            />
+          ))}
         />
         <div
           style={{
             height: 50,
             position: 'absolute',
-            background: 'green',
-            left: `${values[0] / (max - min) * 100}%`,
-            right: `${(max - min - values[1]) / (max - min) * 100}%`,
-          }}
-          className={`${bar} ${bar2} bar2`}
-        />
-        <Handle
-          onDrag={value => this.handleDrag(value, 1)}
-          position={(this.state.values[1]) * this.state.pixelsPerValue}
-          value={this.state.values[1]}
-        />
-        <div
-          style={{
-            height: 50,
-            position: 'absolute',
-            left: `${values[1] / (max - min) * 100}%`,
+            left: `${values[values.length - 1] / (max - min) * 100}%`,
             right: 0,
           }}
-          className={`${bar} ${bar2} bar2`}
+          className={`${bar} ${bar2} bar${values.length}`}
         />
       </div>
     );
