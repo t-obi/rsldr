@@ -40,6 +40,7 @@ class Handle extends Component {
 
   render() {
     const style = {
+      zIndex: 1,
       position: 'absolute',
       transform: 'translateX(-50%)',
       left: this.props.position,

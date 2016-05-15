@@ -5,22 +5,22 @@ import Handle from './handle';
 class Slider extends Component {
 
   static propTypes = {
-    value: PropTypes.number,
-    defaultValue: PropTypes.number.isRequired,
+    values: PropTypes.arrayOf(PropTypes.number),
+    defaultValues: PropTypes.arrayOf(PropTypes.number.isRequired),
     min: PropTypes.number.isRequired,
     max: PropTypes.number.isRequired,
     step: PropTypes.number.isRequired,
   };
 
   static defaultProps = {
-    defaultValue: 0,
+    defaultValues: [0, 20],
     min: 0,
     max: 100,
     step: 1,
   }
 
   state = {
-    value: this.props.defaultValue,
+    values: this.props.defaultValues,
     pixelsPerValue: 1,
   }
 
@@ -33,12 +33,14 @@ class Slider extends Component {
     window.removeEventListener('resize', this.measure);
   }
 
-  handleDrag = pixelOffset => {
+  handleDrag = (pixelOffset, idx) => {
     // keep value between min, max
-    const value = Math.max(Math.min(
+    const { values } = this.state;
+    values[idx] = Math.max(Math.min(
       Math.floor(pixelOffset / this.state.pixelsPerValue),
       this.props.max), this.props.min);
-    this.setState({ value });
+    console.log('set values: ', values);
+    this.setState({ values });
   };
 
   measure = () => {
@@ -50,20 +52,45 @@ class Slider extends Component {
   }
 
   render() {
+    const { values } = this.state;
+    const { min, max } = this.props;
     return (
       <div className={slider} ref="slider">
         <div
-          style={{ width: Math.floor(this.state.value * this.state.pixelsPerValue) }}
+          style={{
+            height: 50,
+            position: 'absolute',
+            left: 0,
+            right: `${(max - min - values[0]) / (max - min) * 100}%`,
+          }}
           className={`${bar} ${bar1} bar1`}
         />
         <Handle
-          onDrag={this.handleDrag}
-          position={this.state.value * this.state.pixelsPerValue}
-          value={this.state.value}
+          onDrag={value => this.handleDrag(value, 0)}
+          position={this.state.values[0] * this.state.pixelsPerValue}
+          value={this.state.values[0]}
         />
         <div
           style={{
-            width: this.state.width - Math.floor(this.state.value * this.state.pixelsPerValue),
+            height: 50,
+            position: 'absolute',
+            background: 'green',
+            left: `${values[0] / (max - min) * 100}%`,
+            right: `${(max - min - values[1]) / (max - min) * 100}%`,
+          }}
+          className={`${bar} ${bar2} bar2`}
+        />
+        <Handle
+          onDrag={value => this.handleDrag(value, 1)}
+          position={(this.state.values[1]) * this.state.pixelsPerValue}
+          value={this.state.values[1]}
+        />
+        <div
+          style={{
+            height: 50,
+            position: 'absolute',
+            left: `${values[1] / (max - min) * 100}%`,
+            right: 0,
           }}
           className={`${bar} ${bar2} bar2`}
         />
