@@ -8,17 +8,20 @@ class Slider extends Component {
     values: PropTypes.arrayOf(PropTypes.number.isRequired),
     min: PropTypes.number.isRequired,
     max: PropTypes.number.isRequired,
-    step: PropTypes.number.isRequired,
+    stepSize: PropTypes.number.isRequired,
+    minDistance: PropTypes.number,
     onBeforeChange: PropTypes.func,
     onChange: PropTypes.func,
     onAfterChange: PropTypes.func,
+    onHandleCollision: PropTypes.func,
   };
 
   static defaultProps = {
     values: [0, 100],
     min: 0,
     max: 100,
-    step: 1,
+    stepSize: 1,
+    minDistance: 1,
     onBeforeChange: () => {},
     onChange: () => {},
     onAfterChange: () => {},
@@ -41,9 +44,21 @@ class Slider extends Component {
   handleDrag = (pixelOffset, idx) => {
     // keep value between min, max
     const { values } = this.state;
+    const min = idx === 0 ?
+      this.props.min :
+      values[idx - 1] + this.props.minDistance;
+    const max = idx === values.length - 1 ?
+      this.props.max :
+      values[idx + 1] - this.props.minDistance;
+
     values[idx] = Math.max(Math.min(
       Math.floor(pixelOffset / this.state.pixelsPerValue),
-      this.props.max), this.props.min);
+      max), min);
+    if (values[idx] === values[idx - 1] + this.props.minDistance) {
+      this.props.onHandleCollision([idx - 1, idx]);
+    } else if (values[idx] === values[idx + 1] - this.props.minDistance) {
+      this.props.onHandleCollision([idx, idx + 1]);
+    }
     this.setState({ values });
     this.props.onChange(values);
   };
