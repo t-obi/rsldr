@@ -25,10 +25,15 @@ class Slider extends Component {
     onBeforeChange: () => {},
     onChange: () => {},
     onAfterChange: () => {},
+    onHandleCollision: () => {},
   }
 
   state = {
-    values: this.props.values,
+    values: this.props.values.map(value => {
+      const stepsMin = Math.floor(value / this.props.stepSize);
+      console.log('step min: ', value, stepsMin);
+      return stepsMin * this.props.stepSize;
+    }),
     pixelsPerValue: 1,
   }
 
@@ -41,24 +46,45 @@ class Slider extends Component {
     window.removeEventListener('resize', this.measure);
   }
 
+  valueToStep = value => {
+    const stepsMin = Math.floor(value / this.props.stepSize);
+    console.log('step min: ', value, stepsMin);
+    return stepsMin * this.props.stepSize;
+  }
+
   handleDrag = (pixelOffset, idx) => {
     // keep value between min, max
     const { values } = this.state;
+    const { stepSize, minDistance } = this.props;
     const min = idx === 0 ?
       this.props.min :
-      values[idx - 1] + this.props.minDistance;
+      values[idx - 1] + minDistance;
     const max = idx === values.length - 1 ?
       this.props.max :
-      values[idx + 1] - this.props.minDistance;
+      values[idx + 1] - minDistance;
 
-    values[idx] = Math.max(Math.min(
-      Math.floor(pixelOffset / this.state.pixelsPerValue),
-      max), min);
-    if (values[idx] === values[idx - 1] + this.props.minDistance) {
+    const valueAtMouse = Math.floor(pixelOffset / this.state.pixelsPerValue);
+    // find steps adjacent to value at mouse-position
+    const nextLowerValue = Math.floor(valueAtMouse / stepSize) * stepSize;
+    const nextBiggerValue = Math.floor(valueAtMouse / stepSize + 1) * stepSize;
+    // determine wich of these is closer to mouse-position
+    const closerValue = valueAtMouse - nextLowerValue < nextBiggerValue - valueAtMouse
+      ? nextLowerValue : nextBiggerValue;
+    // if the found value is different from current value, use as next value
+    // (else do not change the value)
+    if (values[idx] !== closerValue) {
+      values[idx] = Math.max(Math.min(
+        closerValue,
+        max), min);
+    }
+
+    // emit collision events if adjacent handles are closer than mindistance
+    if (values[idx] === values[idx - 1] + minDistance) {
       this.props.onHandleCollision([idx - 1, idx]);
-    } else if (values[idx] === values[idx + 1] - this.props.minDistance) {
+    } else if (values[idx] === values[idx + 1] - minDistance) {
       this.props.onHandleCollision([idx, idx + 1]);
     }
+
     this.setState({ values });
     this.props.onChange(values);
   };

@@ -7,11 +7,10 @@ const SliderContainer = () => (
     <Title render={prev => `${prev} | Slider!`} />
     <Slider
       values={[0, 50, 100]}
-      onChange={values => console.log('during drag: ', values)}
       onAfterChange={values => console.log('after drag: ', values)}
       onBeforeChange={values => console.log('before drag: ', values)}
-      onHandleCollision={handles => console.error('handle collision: ', handles)}
       minDistance={10}
+      stepSize={20}
     />
   </div>
 );
