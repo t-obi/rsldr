@@ -54,6 +54,7 @@ class Slider extends Component {
 
   handleDrag = (pixelOffset, idx) => {
     // keep value between min, max
+    console.log('handleDrag: ', pixelOffset, idx);
     const { values } = this.state;
     const { stepSize, minDistance } = this.props;
     const min = idx === 0 ?
@@ -63,7 +64,7 @@ class Slider extends Component {
       this.props.max :
       values[idx + 1] - minDistance;
 
-    const valueAtMouse = Math.floor(pixelOffset / this.state.pixelsPerValue);
+    const valueAtMouse = Math.floor(pixelOffset / this.state.pixelsPerValue) + this.props.min;
     // find steps adjacent to value at mouse-position
     const nextLowerValue = Math.floor(valueAtMouse / stepSize) * stepSize;
     const nextBiggerValue = Math.floor(valueAtMouse / stepSize + 1) * stepSize;
@@ -108,7 +109,7 @@ class Slider extends Component {
             height: 50,
             position: 'absolute',
             left: 0,
-            right: `${(max - min - values[0]) / (max - min) * 100}%`,
+            right: `${(max - min - (values[0] - this.props.min)) / (max - min) * 100}%`,
           }}
           className={`${bar} ${bar1} bar0`}
         />
@@ -119,7 +120,7 @@ class Slider extends Component {
             onDragStart={() => this.props.onBeforeChange(this.state.values)}
             onDrag={nextValue => this.handleDrag(nextValue, currentIndex)}
             onDragEnd={() => this.props.onAfterChange(this.state.values)}
-            position={value * this.state.pixelsPerValue}
+            position={(value - min) * this.state.pixelsPerValue}
             value={value}
           />
         ))}
@@ -136,8 +137,8 @@ class Slider extends Component {
                 height: 50,
                 position: 'absolute',
                 background: 'green',
-                left: `${value / (max - min) * 100}%`,
-                right: `${(max - min - values[currentIndex + 1]) / (max - min) * 100}%`,
+                left: `${(value - min) / (max - min) * 100}%`,
+                right: `${(max - min - (values[currentIndex + 1] - min)) / (max - min) * 100}%`,
               }}
               className={`${bar} ${bar2} bar${currentIndex + 1}`}
             />
@@ -147,7 +148,7 @@ class Slider extends Component {
           style={{
             height: 50,
             position: 'absolute',
-            left: `${values[values.length - 1] / (max - min) * 100}%`,
+            left: `${(values[values.length - 1] - this.props.min) / (max - min) * 100}%`,
             right: 0,
           }}
           className={`${bar} ${bar2} bar${values.length}`}
