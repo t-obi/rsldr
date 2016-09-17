@@ -1,4 +1,4 @@
-const karma_webpack =  require('karma-webpack');
+//const karma_webpack = require('karma-webpack');
 const webpack = require('webpack');
 const webpackConfig = require('./webpack.config');
 webpackConfig.externals = {};
@@ -12,18 +12,15 @@ module.exports = function (config) {
     frameworks: ['mocha'],
     reporters: ['mocha'],
     files: [
-      //'src/components/Dragon/index.test.js'
-      //'src/components/Slider/handle.test.js'
-      'src/**/*.test.js'
+      'src/**/*.test.js',
     ],
     preprocessors: {
-      'src/**/*.test.js': ['webpack']
-      //'src/components/Dragon/index.test.js': ['webpack']
+      'src/**/*.test.js': ['webpack'],
     },
 
     webpack: webpackConfig,
     webpackServer: {
-      noInfo: true
-    }
+      noInfo: true,
+    },
   });
 };

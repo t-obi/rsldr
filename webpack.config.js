@@ -1,13 +1,18 @@
 const path = require('path');
 const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const ROOT_PATH = path.resolve(__dirname);
-const SRC_PATH = path.resolve(ROOT_PATH, 'src');
+const EXAMPLES_PATH = path.resolve(ROOT_PATH, 'examples');
+const LIB_PATH = path.resolve(ROOT_PATH, 'lib');
+const TESTS_PATH = path.resolve(ROOT_PATH, 'tests');
+
+const PUBLIC_PATH = '/';
 
 const CONFIG_DEV = {
   resolve: {
     extensions: ['', '.js', '.jsx', '.json'],
-    root: SRC_PATH,
+    root: ROOT_PATH,
     alias: {
       sinon: path.resolve(ROOT_PATH, 'node_modules/sinon/pkg/sinon.js'),
     },
@@ -15,7 +20,7 @@ const CONFIG_DEV = {
   entry: [
     'webpack-dev-server/client?http://localhost:3000',
     'webpack/hot/only-dev-server',
-    path.join(SRC_PATH, 'main.js'),
+    path.join(EXAMPLES_PATH, 'main.js'),
   ],
   module: {
     noParse: [
@@ -25,7 +30,7 @@ const CONFIG_DEV = {
       {
         test: /\.jsx?$/,
         loader: 'babel',
-        include: [SRC_PATH],
+        include: [EXAMPLES_PATH, LIB_PATH, TESTS_PATH],
         query: {
           presets: ['stage-0', 'es2015', 'react'],
           plugins: [
@@ -51,16 +56,24 @@ const CONFIG_DEV = {
     ],
   },
   output: {
-    path: path.resolve(__dirname, 'build'),
-    publicPath: '/',
+    path: path.resolve(__dirname, 'dist_examples'),
+    publicPath: PUBLIC_PATH,
     filename: 'bundle.js',
   },
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('development'),
+      CONFIG: {
+        basePath: JSON.stringify(PUBLIC_PATH),
+      },
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
+    new HtmlWebpackPlugin({
+      template: `${EXAMPLES_PATH}/index.html`,
+      filename: 'index.html',
+      inject: 'body',
+    }),
   ],
 };
 

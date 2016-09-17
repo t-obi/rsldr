@@ -1,19 +1,17 @@
 import React from 'react';
-const { element } = React.PropTypes;
 
 import { IndexLink } from 'react-router';
-import Title from 'react-title-component';
 
+const { element } = React.PropTypes;
 const propTypes = {
   children: element,
 };
 
 const App = props => (
   <div>
-    <Title render="Awesome App" />
     <h1>Slider Example</h1>
     <ul>
-      <li><IndexLink to="/">Home</IndexLink></li>
+      <li><IndexLink to="/example">Slider</IndexLink></li>
     </ul>
     {props.children}
   </div>
