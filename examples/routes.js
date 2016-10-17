@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, IndexRoute } from 'react-router';
 
-import Slider from 'examples/components/Slider';
+import Slider from './components/Slider';
 import './styles.css';
 import App from './components/App';
 import NoMatch from './components/NoMatch';
